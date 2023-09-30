@@ -2,6 +2,8 @@ from crypto_api_endpoints.cogingeco import CoginGeco
 from crypto_api_endpoints.kucoin import Kucoin
 from crypto_api_endpoints.bitfinex import Bitfinex
 from crypto_api_endpoints.zonda import Zonda
+from req import get_usd_from_NBP
+import json
 
 def factory(user_input: list[str]):
  
@@ -22,12 +24,41 @@ def factory(user_input: list[str]):
 user_input = ["CoginGeco", "Kucoin", "Bitfinex", "Zonda"]
 markets = factory(user_input)
 
-currencies = ["BTC", "ETH"]
+currencies = {"BTC": 1.3, "ETH": 15, "DOGE": 7899, "XRP": 3}
 
 output = []
 for idx, market in enumerate(markets):
-    market_prices = market.get_prices(*currencies)
+    market_prices = market.get_prices(*currencies.keys())
     market_prices["market"] = user_input[idx]
     output.append(market_prices)
 
-print(output)
+usd_to_pln = get_usd_from_NBP()
+with open("cryptocurrency.json", "r") as f:
+    crypto_names = json.load(f)
+
+
+
+final_output = {"nbp_usd_pln": usd_to_pln, "cryptocurrencies": []}
+for currency in currencies:
+    exchanges = []
+    for data in output:
+        market_data = {}
+        market_data["name"] = data["market"]
+        if data["currency"] == "PLN":
+            market_data["pln"] = data["prices"][currency]
+        else:
+            market_data["usd"] = data["prices"][currency]
+            market_data["pln"] = data["prices"][currency]*usd_to_pln
+        exchanges.append(market_data)
+
+    final_output["cryptocurrencies"].append(
+        {
+            "code": currency.lower(),
+            "name": crypto_names[currency],
+            "volume": currencies[currency],
+            "exchanges": exchanges
+        } 
+    )
+
+
+print(final_output)
