@@ -4,15 +4,18 @@ import json
 
 app = Flask(__name__,template_folder='./frontend/template')
 
-@app.route('/test/', methods = ['GET','POST'])
-def index():
+@app.route('/', methods=['GET', 'POST'])
+def get_forms():
+    cryptocurrencies = get_crypto()
+    cryptocurrencies = list(cryptocurrencies.keys())
     if request.method == 'POST':
-        user_input = request.form.get('user_input', '').split('\n')
-
+        num_sections = int(request.form.get('num_sections'))
     else:
-        user_input = []
-   
-    return render_template('index.html',user_input=user_input)
+        num_sections = None
+
+    return render_template('test.html', num_sections=num_sections, cryptocurrencies = cryptocurrencies)
+
+
 
 @app.route('/crypto/', methods=['GET'])
 def get_json():
@@ -20,10 +23,10 @@ def get_json():
     return CoginGeco.get_prices(*shortcuts)
 
 
-@app.route('/crypto_shortcuts/', methods=['GET'])
 def get_crypto():
     with open('cryptocurrency.json', 'r') as json_file:
         return json.load(json_file)
+
     
 @app.route('/gettemplate', methods=["GET","POST"])
 def dropdown():

@@ -13,7 +13,6 @@
     {% if num_sections %}
         <h2>Generated Sections:</h2>
         {% for i in range(num_sections) %}
-        <section>
         <form name="Item_1">
             <label for = 'example'>Choose Cryptocurrency</label>
             <select name="cryptocurrencies">
@@ -22,9 +21,7 @@
                 {%endfor%}
             </select>
         </form>
-    </section>
         {% endfor %}
     {% endif %}
-    
 </body>
 </html>
