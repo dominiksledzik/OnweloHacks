@@ -8,5 +8,3 @@ def get_usd_from_NBP():
 
     usd = [elem['mid'] for elem in nbp_currency_lst if elem['code'] == 'USD'][0]
     return usd
-
-print(get_usd_from_NBP())
