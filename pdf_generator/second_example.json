@@ -1,0 +1,101 @@
+{
+    "nbp_usd_pln": 4.3697,
+    "cryptocurrencies": [
+        {
+            "code": "btc",
+            "name": "Bitcoin",
+            "volume": 1.3,
+            "exchanges": [
+                {
+                    "name": "CoginGeco",
+                    "pln": 118245
+                },
+                {
+                    "name": "Kucoin",
+                    "pln": "118230.5054728181603333"
+                },
+                {
+                    "name": "Bitfinex",
+                    "usd": 27038.0,
+                    "pln": 118147.9486
+                },
+                {
+                    "name": "Zonda",
+                    "pln": 118388.0
+                }
+            ]
+        },
+        {
+            "code": "eth",
+            "name": "Ethereum",
+            "volume": 15,
+            "exchanges": [
+                {
+                    "name": "CoginGeco",
+                    "pln": 7350.12
+                },
+                {
+                    "name": "Kucoin",
+                    "pln": "7337.5037073002120539"
+                },
+                {
+                    "name": "Bitfinex",
+                    "usd": 1677.2,
+                    "pln": 7328.86084
+                },
+                {
+                    "name": "Zonda",
+                    "pln": 7351.75
+                }
+            ]
+        },
+        {
+            "code": "doge",
+            "name": "Dogecoin",
+            "volume": 7899,
+            "exchanges": [
+                {
+                    "name": "CoginGeco",
+                    "pln": 1.8105e-08
+                },
+                {
+                    "name": "Kucoin",
+                    "pln": "0.2723233337760000"
+                },
+                {
+                    "name": "Bitfinex",
+                    "usd": 0.062272,
+                    "pln": 0.2721099584
+                },
+                {
+                    "name": "Zonda",
+                    "pln": 0.2739
+                }
+            ]
+        },
+        {
+            "code": "xrp",
+            "name": "XRP",
+            "volume": 3,
+            "exchanges": [
+                {
+                    "name": "CoginGeco",
+                    "pln": 0.00015136
+                },
+                {
+                    "name": "Kucoin",
+                    "pln": "2.2611499945710000"
+                },
+                {
+                    "name": "Bitfinex",
+                    "usd": 0.51694,
+                    "pln": 2.2588727179999997
+                },
+                {
+                    "name": "Zonda",
+                    "pln": 2.28
+                }
+            ]
+        }
+    ]
+}

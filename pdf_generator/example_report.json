@@ -2,43 +2,45 @@
     "nbp_usd_pln": 4.38,
     "cryptocurrencies": [
         {
-                "code": "btc",
-                "name": "Bitcoin",
-                "volume": 10.0,
-                "exchanges": [
-                    {
-                        "name": "Binance",
-                        "usd": 2000.00
-                    },
-                    {
-                        "name": "Zonda",
-                        "pln": 7600.00
-                    },
-                    {
-                        "name": "Bitfinex",
-                        "usd": 2100.00
-                    }
-                ]
-            },
+            "code": "btc",
+            "name": "Bitcoin",
+            "volume": 10.0,
+            "exchanges": [
+                {
+                    "name": "Binance",
+                    "usd": 2000.00
+                },
+                {
+                    "name": "Zonda",
+                    "pln": 7600.00
+                },
+                {
+                    "name": "Bitfinex",
+                    "usd": 2100.00
+                },
+                {
+                    "name": "Coinbase"
+                }
+            ]
+        },
         {
             "code": "eth",
-                "name": "Ethereum",
-                "volume": 5.2,
-                "exchanges": [
-                    {
-                        "name": "Binance",
-                        "pln": 100.00
-                    },
-                    {
-                        "name": "Zonda",
-                        "pln": 110.00
-                    },
-                    {
-                        "name": "Bitfinex",
-                        "usd": 25.00
-                    }
-                ]
-            }
-        
+            "name": "Ethereum",
+            "volume": 5.2,
+            "exchanges": [
+                {
+                    "name": "Binance",
+                    "pln": 100.00
+                },
+                {
+                    "name": "Zonda",
+                    "pln": 110.00
+                },
+                {
+                    "name": "Bitfinex",
+                    "usd": 25.00
+                }
+            ]
+        }
     ]
 }
