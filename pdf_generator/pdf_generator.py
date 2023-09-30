@@ -4,6 +4,17 @@
 from fpdf import FPDF
 import requests
 import datetime
+import json
+
+
+#globals
+report_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+#load the data from the json file
+with open('example_report.json') as f:
+    report = json.load(f)
+
+# print(report)
 
 #create a pdf object
 pdf = FPDF()
@@ -11,118 +22,110 @@ pdf = FPDF()
 # add a page
 pdf.add_page()
 
+def generate_title(title):
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(200, 10, txt=title, ln=1, align="C")
+
+def generate_description(description):
+    pdf.set_font("Arial", '', 12)
+    pdf.cell(200, 10, txt=description, ln=1, align="L")
+
+def generate_portfolio_table(report):
+    pdf.set_font("Arial", '', 10)
+
+    pdf.cell(30, 10, txt="Waluta", border=1, align="C")
+    pdf.cell(30, 10, txt="Ilosc", border=1, align="C")
+    pdf.cell(30, 10, txt="Kurs w PLN", border=1, align="C")
+    pdf.cell(30, 10, txt="Cena w PLN", border=1, align="C")
+    pdf.ln()
+
+    total_portfolio_pln = 0.0
+
+    for coin in report['cryptocurrencies']:
+        # get coin data
+        coin_name = coin['name']
+        coin_volume = coin['volume']
+        
+        coin_exchange_pln = 0.0
+
+        for exchange in coin['exchanges']:
+            if "pln" in exchange:
+                coin_exchange_pln += exchange['pln']
+            elif "usd" in exchange:
+                coin_exchange_pln += (exchange['usd'] * report['nbp_usd_pln'])
+            else:
+                pass
+
+        coin_exchange_pln /= 3
+        coin_price_pln = coin_volume * coin_exchange_pln
+        
+        total_portfolio_pln += coin_price_pln
+
+        # add data to table
+        pdf.cell(30, 10, txt=coin_name, border=1, align="C")
+        pdf.cell(30, 10, txt="{:.2f}".format(coin_volume), border=1, align="C")
+        pdf.cell(30, 10, txt="{:.2f}".format(coin_exchange_pln), border=1, align="C")
+        pdf.cell(30, 10, txt="{:.2f}".format(coin_price_pln), border=1, align="C")
+        # pdf.cell(30, 10, txt=coin_last_updated, border=1, align="C")
+        pdf.ln()
+
+    # add total value of the portfolio
+    pdf.ln()
+    pdf.cell(30, 10, txt="Suma w PLN", border=1, align="C")
+    pdf.cell(30, 10, txt="{:.2f}".format(total_portfolio_pln), border=1, align="C")
+    pdf.ln()
+
+
+def generate_currency_table(report):
+    for currency in report['cryptocurrencies']:
+        generate_title(currency['name'])
+        pdf.ln()
+
+        pdf.set_font("Arial", '', 10)
+        pdf.cell(30, 10, txt="Nazwa gieldy", border=1, align="C")
+        pdf.cell(30, 10, txt="Kurs w USD", border=1, align="C")
+        pdf.cell(30, 10, txt="Kurs w PLN", border=1, align="C")
+        pdf.cell(40, 10, txt="Data aktualizacji", border=1, align="C")
+        pdf.ln()
+
+        for exchange in currency['exchanges']:
+            exchange_name = exchange['name']
+            if "pln" in exchange:
+                exchange_price_usd = "-"
+                exchange_price_pln = "{:.2f}".format(exchange['pln'])
+            elif "usd" in exchange:
+                exchange_price_usd = "{:.2f}".format(exchange['usd'])
+                exchange_price_pln = "{:.2f}".format(exchange['usd'] * report['nbp_usd_pln'])
+            
+            pdf.cell(30, 10, txt=exchange_name, border=1, align="C")
+            pdf.cell(30, 10, txt=exchange_price_usd, border=1, align="C")
+            pdf.cell(30, 10, txt=exchange_price_pln, border=1, align="C")
+            pdf.cell(40, 10, txt=report_date, border=1, align="C")
+            pdf.ln()
+
+        pdf.ln()
+
+
 # Title section of the PDF
-pdf.set_font("Arial", 'B', 16)
-pdf.cell(200, 10, txt="Crypto Price Data", ln=1, align="C")
+generate_title("Crypto Price Data")
 
 # Description section of the PDF
-pdf.set_font("Arial", '', 12)
-pdf.cell(200, 10, txt="This is a pdf file with some crypto price data", ln=1, align="L")
+generate_description("This is a pdf file with some crypto price data")
 
 
 '''
 First part of the PDF - general data about the portfolio
 '''
 
-# Table section of the PDF
-pdf.set_font("Arial", '', 10)
+# General table report
+generate_portfolio_table(report)
 
-pdf.cell(30, 10, txt="Waluta", border=1, align="C")
-pdf.cell(30, 10, txt="Ilosc", border=1, align="C")
-pdf.cell(30, 10, txt="Kurs w USD", border=1, align="C")
-pdf.cell(30, 10, txt="Cena w USD", border=1, align="C")
-pdf.cell(30, 10, txt="Kurs w PLN", border=1, align="C")
-pdf.cell(30, 10, txt="Cena w PLN", border=1, align="C")
-pdf.ln()
-
-# get data from coinmarketcap
-url = "https://api.coinmarketcap.com/data-api/v3/cryptocurrency/listing?start=1&limit=10&sortBy=market_cap&sortType=desc&convert=USD&cryptoType=all&tagType=all&audited=false"
-response = requests.get(url)
-data = response.json()
-coin_data = data['data']['cryptoCurrencyList']
-usd_pln_rate = 4.38
-report_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-sum_in_pln = 0.0
-
-# loop through the data
-for coin in coin_data:
-    # get coin data
-    coin_name = coin['name']
-    coin_volume = 500.0
-    coin_exchange_usd = coin['quotes'][0]['price']
-    coin_price_usd = coin_volume * coin_exchange_usd
-    coin_exchange_pln = coin_exchange_usd * usd_pln_rate
-    coin_price_pln = coin_volume * coin_exchange_pln
-    
-    #Adding up the total value of the portfolio
-    sum_in_pln += coin_price_pln
-
-    # add data to table
-    pdf.cell(30, 10, txt=coin_name, border=1, align="C")
-    pdf.cell(30, 10, txt="{:.2f}".format(coin_volume), border=1, align="C")
-    pdf.cell(30, 10, txt="{:.2f}".format(coin_exchange_usd), border=1, align="C")
-    pdf.cell(30, 10, txt="{:.2f}".format(coin_price_usd), border=1, align="C")
-    pdf.cell(30, 10, txt="{:.2f}".format(coin_exchange_pln), border=1, align="C")
-    pdf.cell(30, 10, txt="{:.2f}".format(coin_price_pln), border=1, align="C")
-    # pdf.cell(30, 10, txt=coin_last_updated, border=1, align="C")
-    pdf.ln()
-
-# add total value of the portfolio
-pdf.ln()
-pdf.cell(30, 10, txt="Suma w PLN", border=1, align="C")
-pdf.cell(30, 10, txt="{:.2f}".format(sum_in_pln), border=1, align="C")
-pdf.ln()
 
 '''
 Second part of the PDF - average price of the coins on different exchanges
 '''
 
-for coin in coin_data:
-    pdf.set_font("Arial", 'B', 16)
-    pdf.cell(200, 10, txt=coin['name'], ln=1, align="C")
-    pdf.ln()
-
-    pdf.set_font("Arial", '', 10)
-    pdf.cell(30, 10, txt="Nazwa gieldy", border=1, align="C")
-    pdf.cell(30, 10, txt="Kurs w USD", border=1, align="C")
-    # pdf.cell(30, 10, txt="Cena w USD", border=1, align="C")
-    pdf.cell(30, 10, txt="Kurs w PLN", border=1, align="C")
-    # pdf.cell(30, 10, txt="Cena w PLN", border=1, align="C")
-    pdf.cell(40, 10, txt="Data aktualizacji", border=1, align="C")
-    pdf.ln()
-
-    average_price_usd = 0.0
-    average_price_pln = 0.0
-
-    exchange_list = ['Binance', 'Coinbase Pro', 'Kraken']
-
-    for i in range(3):
-        exchange_name = coin['name']
-        exchange_price_usd = coin['quotes'][0]['price']
-        exchange_price_pln = exchange_price_usd * usd_pln_rate
-
-        average_price_usd += exchange_price_usd
-        average_price_pln += exchange_price_pln
-        
-        pdf.cell(30, 10, txt=exchange_list[i], border=1, align="C")
-        pdf.cell(30, 10, txt="{:.2f}".format(exchange_price_usd), border=1, align="C")
-        pdf.cell(30, 10, txt="{:.2f}".format(exchange_price_pln), border=1, align="C")
-        pdf.cell(40, 10, txt=report_date, border=1, align="C")
-        pdf.ln()
-
-
-    average_price_usd /= 3
-    average_price_pln /= 3
-    pdf.ln()
-
-
-    pdf.cell(30, 10, txt="Sredni kurs w USD", border=1, align="C")
-    pdf.cell(30, 10, txt="{:.2f}".format(average_price_usd), border=1, align="C")
-    pdf.cell(30, 10, txt="Sredni kurs w pln", border=1, align="C")
-    pdf.cell(30, 10, txt="{:.2f}".format(average_price_pln), border=1, align="C")
-    pdf.ln()
-
+generate_currency_table(report)
 
 
 pdf.output("crypto_price_data.pdf")
