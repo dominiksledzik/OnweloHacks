@@ -22,7 +22,7 @@ class CoginGeco:
         headers = {'content-type': 'application/json'}
         response = requests.request("GET", url, headers=headers)
 
-        return json.loads(response.text)
+        return response.json()
 
     @staticmethod
     def conversion():
