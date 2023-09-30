@@ -1,8 +1,8 @@
-[{"Bitcoin" : {"shortcut": "BTC", "aliases": []}},
-{"Ethereum" : {"shortcut": "ETH", "aliases": []}},
-{"Tether" : {"shortcut": "USDT", "aliases": []}},
-{"BNB" : {"shortcut": "BNB", "aliases": []}},
-{"USD Coin" : {"shortcut": "USDC", "aliases": []}},
-{"Cardano" : {"shortcut": "ADA", "aliases": []}},
-{"Dogecoin" : {"shortcut": "DOGE", "aliases": []}},
-{"XRP" : {"shortcut": "XRP", "aliases": []}}]
+[{"BTC" : {"full_name": "Bitcoin", "aliases": []}},
+{"ETH" : {"full_name": "Ethereum", "aliases": []}},
+{"USDT" : {"full_name": "Tether", "aliases": []}},
+{"BNB" : {"full_name": "BNB", "aliases": []}},
+{"USDC" : {"full_name": "USD Coin", "aliases": []}},
+{"ADA" : {"full_name": "Cardano", "aliases": []}},
+{"DOGE" : {"full_name": "Dogecoin", "aliases": []}},
+{"XRP" : {"full_name": "XRP", "aliases": []}}]
