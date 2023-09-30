@@ -8,7 +8,9 @@ class Kucoin():
         response = requests.request('GET', url, params={"base": "PLN", "currencies": shortcuts})
         json_output = response.json()
 
-        return json_output
+        final_output = {"currency": "PLN", "prices": json_output["data"]}
+
+        return final_output
 
     @staticmethod
     def extract_prices(self, json_output: dict[str]):
