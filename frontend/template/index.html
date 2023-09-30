@@ -1,13 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+<head>
+    <title>Generate Sections</title>
+</head>
 <body>
-    <form name="Item_1">
-        <label for = 'example'>Choose Cryptocurrency</label>
-        <select name="cryptocurrencies">
-            {% for crypto in cryptocurrencies %}
-            <option valeu="{{ crypto }}" selected>{{ crypto }}</option>
-            {%endfor%}
-        </select>
+    <h1>Generate Sections</h1>
+    <form method="POST">
+        <label for="num_sections">Number of Sections:</label>
+        <input type="number" id="num_sections" name="num_sections">
+        <input type="submit" value="Generate">
     </form>
+    {% if num_sections %}
+        <h2>Generated Sections:</h2>
+        {% for i in range(num_sections) %}
+            <section>
+                <h3>Section {{ i + 1 }}</h3>
+                <p>This is section {{ i + 1 }}.</p>
+            </section>
+        {% endfor %}
+    {% endif %}
 </body>
 </html>
