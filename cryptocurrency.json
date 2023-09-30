@@ -1,0 +1,8 @@
+[{"Bitcoin" : {"shortcut": "BTC", "aliases": []}},
+{"Ethereum" : {"shortcut": "ETH", "aliases": []}},
+{"Tether" : {"shortcut": "USDT", "aliases": []}},
+{"BNB" : {"shortcut": "BNB", "aliases": []}},
+{"USD Coin" : {"shortcut": "USDC", "aliases": []}},
+{"Cardano" : {"shortcut": "ADA", "aliases": []}},
+{"Dogecoin" : {"shortcut": "DOGE", "aliases": []}},
+{"XRP" : {"shortcut": "XRP", "aliases": []}}]
