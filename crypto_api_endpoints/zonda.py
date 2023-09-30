@@ -1,25 +1,26 @@
 import requests
 import json
 
-cryptocurrencyName = 'BTC' #TODO: delete //placeholder
-currencyName = 'PLN' #TODO: delete //placeholder
 
-cryptoValue = 4.66 #TODO delete that // change vlaue to what i taken from the formula.
-
-url = f"https://api.zondacrypto.exchange/rest/trading/ticker/{cryptocurrencyName}-{currencyName}"
-
-headers = {'content-type': 'application/json'}
-
-response = requests.request("GET", url, headers=headers)
+class Zonda:
 
 
-response_json = json.loads(response.text)
-conversionRate = float(response_json['ticker']['rate'])
+    @staticmethod
+    def get_price(*shortcuts):
+        headers = {"content-type": "application/json"}
+        json_data = None
+        with open('../cryptocurrency.json','r',encoding='utf-8') as json_file:
+            json_data = json.load(json_file)
+        final_dict = {}
+        for idx,shortcut in enumerate(shortcuts):
+            url = f"https://api.zondacrypto.exchange/rest/trading/ticker/{shortcuts[idx]}-PLN"
+            response = requests.request("GET", url, headers=headers, timeout=5)
+            response = response.json()
+            conversion_rate = float(response["ticker"]["rate"])
+            conerted_values = {json_data[shortcut]['full_name']:{'pln':conversion_rate}}
+            final_dict.update(conerted_values)
+        return final_dict
 
-conversion = {
-    "conversion_rate": conversionRate,
-    "crypto" : cryptocurrencyName,
-    "currency": currencyName
-}
-
-finalValueZloty = format(cryptoValue * conversionRate, '.2f')
+    @staticmethod
+    def convert():
+        pass
