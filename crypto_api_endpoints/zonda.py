@@ -1,21 +1,25 @@
 import requests
 import json
 
-cryptocurrencyValue = 'BTC'
-currency = 'PLN'
+cryptocurrencyName = 'BTC' #TODO: delete //placeholder
+currencyName = 'PLN' #TODO: delete //placeholder
 
-url = f"https://api.zondacrypto.exchange/rest/trading/ticker/{cryptocurrencyValue}-{currency}"
+cryptoValue = 4.66 #TODO delete that // change vlaue to what i taken from the formula.
+
+url = f"https://api.zondacrypto.exchange/rest/trading/ticker/{cryptocurrencyName}-{currencyName}"
 
 headers = {'content-type': 'application/json'}
 
 response = requests.request("GET", url, headers=headers)
 
-# print(response.text)
-x = json.loads(response.text)
+
+response_json = json.loads(response.text)
+conversionRate = float(response_json['ticker']['rate'])
+
 conversion = {
-    "conversion_rate": x['ticker']['rate'],
-    "crypto" : cryptocurrencyValue,
-    "currency": currency
+    "conversion_rate": conversionRate,
+    "crypto" : cryptocurrencyName,
+    "currency": currencyName
 }
 
-print(conversion)
+finalValueZloty = format(cryptoValue * conversionRate, '.2f')
