@@ -3,9 +3,9 @@ import requests
 class Kucoin():
 
     @staticmethod
-    def get_prices(currencies: list[str]):
+    def get_prices(*shortcuts):
         url = "https://api.kucoin.com/api/v1/prices"
-        response = requests.request('GET', url, params={"base": "PLN", "currencies": currencies})
+        response = requests.request('GET', url, params={"base": "PLN", "currencies": shortcuts})
         json_output = response.json()
 
         return json_output
