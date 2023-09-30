@@ -16,6 +16,7 @@ def factory(user_input: list[str]):
     return output
 
 user_input = ["CoginGeco", "Kucoin"]
+
 markets = factory(user_input)
 
 currencies = ["BTC", "ETH"]
@@ -23,4 +24,3 @@ currencies = ["BTC", "ETH"]
 output = []
 for market in markets:
     output.append(market.get_prices(*currencies))
-    
