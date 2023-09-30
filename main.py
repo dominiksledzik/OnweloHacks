@@ -1,5 +1,5 @@
 from crypto_api_endpoints.coingeco import CoginGeco
-from kucoin import Kucoin
+from crypto_api_endpoints.kucoin import Kucoin
 
 
 def factory(user_input: list[str]):
@@ -15,7 +15,7 @@ def factory(user_input: list[str]):
  
     return output
 
-user_input = ["CoinGeco", "Kucoin"]
+user_input = ["Kucoin"]
 markets = factory(user_input)
 
 currencies = ["BTC", "ETH"]
