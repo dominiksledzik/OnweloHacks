@@ -2,13 +2,13 @@
 
 # import the necessary libraries
 from fpdf import FPDF
-import requests
 import datetime
 import json
 
 
 #globals
 report_date = datetime.datetime.now().strftime("%d.%m.%Y")
+
 
 #load the data from the json file
 with open('example_report.json') as f:
@@ -19,6 +19,9 @@ with open('example_report.json') as f:
 #create a pdf object
 pdf = FPDF()
 
+#fill color
+pdf.set_fill_color(200, 200, 200)
+
 # add a page
 pdf.add_page()
 
@@ -26,11 +29,26 @@ def generate_title(title):
     pdf.set_font("Arial", 'B', 16)
     pdf.cell(200, 10, txt=title, ln=1, align="C")
 
+def generate_full_header(mode):
+    if mode == "local":
+        generate_description("numer ID raportu", "42")
+        generate_description("Data wykonania raportu", report_date)
+        generate_description("Numer sprawy", "101")
+        generate_description("Imie i Nazwisko", "Jan Kowalski")
+        generate_description("Dane adresowe", "ul. Malinowa 5, 43-300 Bielsko-Biala")
+    elif mode == "input":
+        generate_description("numer ID raportu", report["report_id"])
+        generate_description("Data wykonania raportu", report_date)
+        generate_description("Numer sprawy", report["issue_id"])
+        generate_description("Imie i Nazwisko", report["full_applicant_name"])
+        generate_description("Dane adresowe", report["applicant_address"])
+    pdf.ln()
+
 def generate_description(section_name, value):
     pdf.set_font("Arial", 'B', 12)
     pdf.cell(60, 10, txt=section_name, border=0, align="L")
     pdf.set_font("Arial", '', 12)
-    pdf.cell(100, 10, txt=value, border=0, align="L")
+    pdf.cell(150, 10, txt=value, border=0, align="L")
     pdf.ln()
 
 def generate_portfolio_table(report):
@@ -74,16 +92,19 @@ def generate_portfolio_table(report):
         pdf.ln()
 
     # add total value of the portfolio
+    pdf.cell(30, 10, border=0, align="C")
+    pdf.cell(30, 10, border=0, align="C")
+    pdf.set_font("Arial", 'B', 8)
+    pdf.cell(30, 10, txt="Suma w PLN", border=1, align="C", fill=True)
+    pdf.set_font("Arial", '', 8)
+    pdf.cell(30, 10, txt="{:.2f}".format(total_portfolio_pln), border=1, align="C", fill=True)
     pdf.ln()
-    pdf.cell(30, 10, txt="Suma w PLN", border=1, align="C")
-    pdf.cell(30, 10, txt="{:.2f}".format(total_portfolio_pln), border=1, align="C")
     pdf.ln()
 
 
 def generate_currency_table(report):
     for currency in report['cryptocurrencies']:
         generate_title(currency['name'])
-        pdf.ln()
 
         pdf.set_font("Arial", 'B', 10)
         pdf.cell(30, 10, txt="Nazwa gieldy", border=1, align="C")
@@ -123,10 +144,7 @@ def generate_currency_table(report):
 generate_title("Szacowanie wartosci kryptoaktywow")
 
 # Description section of the PDF
-generate_description("numer ID raportu", "42")
-generate_description("Data wykonania raportu", report_date)
-generate_description("Numer sprawy", "101")
-generate_description("Imie i Nazwisko", "Jan Kowalski")
+generate_full_header("input")
 
 '''
 First part of the PDF - general data about the portfolio
