@@ -17,7 +17,10 @@ class Bitfinex():
 
             response = requests.get(url + pair)
             data = response.json()
-            output[shortcut] = float(data["last_price"])
+            try:
+                output[shortcut] = float(data["last_price"])
+            except KeyError:
+                continue
 
         final_output = {"currency": "USD", "prices": output}
         return final_output

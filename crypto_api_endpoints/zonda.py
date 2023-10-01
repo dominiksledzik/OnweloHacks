@@ -13,7 +13,10 @@ class Zonda:
             url = f"https://api.zondacrypto.exchange/rest/trading/ticker/{shortcut}-PLN"
             response = requests.request("GET", url, headers=headers)
             response = response.json()
-            conversion_rate = float(response["ticker"]["rate"])
+            try:
+                conversion_rate = float(response["ticker"]["rate"])
+            except KeyError:
+                continue
             output[shortcut] = conversion_rate
         
         final_output = {"currency": "PLN", "prices": output}

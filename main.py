@@ -21,7 +21,7 @@ def factory(user_input: list[str]):
     return output
 
 
-user_input = ["CoginGeco", "Kucoin", "Bitfinex", "Zonda"]
+user_input = ["Zonda", "Bitfinex", "CoginGeco", "Kucoin"]
 markets = factory(user_input)
 
 currencies = {"BTC": 1.3, "ETH": 15, "DOGE": 7899, "XRP": 3}
@@ -44,11 +44,14 @@ for currency in currencies:
     for data in output:
         market_data = {}
         market_data["name"] = data["market"]
-        if data["currency"] == "PLN":
-            market_data["pln"] = data["prices"][currency]
-        else:
-            market_data["usd"] = data["prices"][currency]
-            market_data["pln"] = data["prices"][currency]*usd_to_pln
+        try:
+            if data["currency"] == "PLN":
+                market_data["pln"] = data["prices"][currency]
+            else:
+                market_data["usd"] = data["prices"][currency]
+                market_data["pln"] = data["prices"][currency]*usd_to_pln
+        except KeyError:
+            pass
         exchanges.append(market_data)
 
     final_output["cryptocurrencies"].append(
@@ -59,6 +62,3 @@ for currency in currencies:
             "exchanges": exchanges
         } 
     )
-
-
-print(final_output)
