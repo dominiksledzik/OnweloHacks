@@ -25,6 +25,10 @@ pdf.set_fill_color(200, 200, 200)
 # add a page
 pdf.add_page()
 
+def add_line(repetitions=1):
+    for i in range(repetitions):
+        pdf.ln()
+
 def generate_title(title):
     pdf.set_font("Arial", 'B', 16)
     pdf.cell(200, 10, txt=title, ln=1, align="C")
@@ -42,14 +46,24 @@ def generate_full_header(mode):
         generate_description("Numer sprawy", report["issue_id"])
         generate_description("Imie i Nazwisko", report["full_applicant_name"])
         generate_description("Dane adresowe", report["applicant_address"])
-    pdf.ln()
+    add_line()
 
 def generate_description(section_name, value):
     pdf.set_font("Arial", 'B', 12)
     pdf.cell(60, 10, txt=section_name, border=0, align="L")
     pdf.set_font("Arial", '', 12)
     pdf.cell(150, 10, txt=value, border=0, align="L")
-    pdf.ln()
+    add_line()
+
+def generate_nbp_exchange_rate(report):
+    pdf.set_font("Arial", 'B', 10)
+    pdf.cell(40, 10, txt="Kurs USD/PLN (NBP)", border=1, align="C")
+    pdf.cell(40, 10, txt="Data pobrania kursu", border=1, align="C")
+    add_line()
+    pdf.set_font("Arial", '', 10)
+    pdf.cell(40, 10, txt=str(report["nbp_usd_pln"]), border=1, align="C")
+    pdf.cell(40, 10, txt=report_date, border=1, align="C")
+    add_line(2)
 
 def generate_portfolio_table(report):
     pdf.set_font("Arial", 'B', 10)
@@ -57,7 +71,7 @@ def generate_portfolio_table(report):
     pdf.cell(30, 10, txt="Ilosc", border=1, align="C")
     pdf.cell(30, 10, txt="Kurs w PLN", border=1, align="C")
     pdf.cell(30, 10, txt="Cena w PLN", border=1, align="C")
-    pdf.ln()
+    add_line()
 
     total_portfolio_pln = 0.0
 
@@ -89,7 +103,7 @@ def generate_portfolio_table(report):
         pdf.cell(30, 10, txt="{:.2f}".format(coin_exchange_pln), border=1, align="C")
         pdf.cell(30, 10, txt="{:.2f}".format(coin_price_pln), border=1, align="C")
         # pdf.cell(30, 10, txt=coin_last_updated, border=1, align="C")
-        pdf.ln()
+        add_line()
 
     # add total value of the portfolio
     pdf.cell(30, 10, border=0, align="C")
@@ -98,8 +112,8 @@ def generate_portfolio_table(report):
     pdf.cell(30, 10, txt="Suma w PLN", border=1, align="C", fill=True)
     pdf.set_font("Arial", '', 8)
     pdf.cell(30, 10, txt="{:.2f}".format(total_portfolio_pln), border=1, align="C", fill=True)
-    pdf.ln()
-    pdf.ln()
+    add_line(2)
+
 
 
 def generate_currency_table(report):
@@ -112,7 +126,7 @@ def generate_currency_table(report):
         pdf.cell(30, 10, txt="Kurs w PLN", border=1, align="C")
         pdf.cell(40, 10, txt="Data aktualizacji", border=1, align="C")
         pdf.cell(40, 10, txt="Uwagi", border=1, align="C")
-        pdf.ln()
+        add_line()
 
         pdf.set_font("Arial", '', 8)
         for exchange in currency['exchanges']:
@@ -135,9 +149,9 @@ def generate_currency_table(report):
             pdf.cell(30, 10, txt=exchange_price_pln, border=1, align="C")
             pdf.cell(40, 10, txt=report_date, border=1, align="C")
             pdf.cell(40, 10, txt=details, border=1, align="C")
-            pdf.ln()
+            add_line()
 
-        pdf.ln()
+        add_line()
 
 
 # Title section of the PDF
@@ -153,6 +167,8 @@ First part of the PDF - general data about the portfolio
 # General table report
 generate_portfolio_table(report)
 
+# NBP exchange rate
+generate_nbp_exchange_rate(report)
 
 '''
 Second part of the PDF - average price of the coins on different exchanges
