@@ -2,7 +2,6 @@
 
 # import the necessary libraries
 from fpdf import FPDF
-import requests
 import datetime
 import json
 
@@ -10,9 +9,9 @@ import json
 #globals
 report_date = datetime.datetime.now().strftime("%d.%m.%Y")
 
-#load the data from the json file
-with open('example_report.json') as f:
-    report = json.load(f)
+# #load the data from the json file
+# with open('example_report.json') as f:
+#     report = json.load(f)
 
 # print(report)
 
@@ -118,29 +117,29 @@ def generate_currency_table(report):
 
         pdf.ln()
 
+def generate_pdf(report):
+    # Title section of the PDF
+    generate_title("Szacowanie wartosci kryptoaktywow")
 
-# Title section of the PDF
-generate_title("Szacowanie wartosci kryptoaktywow")
+    # Description section of the PDF
+    generate_description("numer ID raportu", "42")
+    generate_description("Data wykonania raportu", report_date)
+    generate_description("Numer sprawy", "101")
+    generate_description("Imie i Nazwisko", "Jan Kowalski")
 
-# Description section of the PDF
-generate_description("numer ID raportu", "42")
-generate_description("Data wykonania raportu", report_date)
-generate_description("Numer sprawy", "101")
-generate_description("Imie i Nazwisko", "Jan Kowalski")
+    '''
+    First part of the PDF - general data about the portfolio
+    '''
 
-'''
-First part of the PDF - general data about the portfolio
-'''
-
-# General table report
-generate_portfolio_table(report)
-
-
-'''
-Second part of the PDF - average price of the coins on different exchanges
-'''
-
-generate_currency_table(report)
+    # General table report
+    generate_portfolio_table(report)
 
 
-pdf.output("crypto_price_data.pdf")
+    '''
+    Second part of the PDF - average price of the coins on different exchanges
+    '''
+
+    generate_currency_table(report)
+
+
+    pdf.output("crypto_price_data.pdf")
