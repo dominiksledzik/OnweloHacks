@@ -1,5 +1,9 @@
 {
     "nbp_usd_pln": 4.38,
+    "report_id": "42",
+    "issue_id": "101",
+    "full_applicant_name": "Damian Lewandowski",
+    "applicant_address": "ul. Pierwsza 1, 02-711 Warszawa", 
     "cryptocurrencies": [
         {
             "code": "btc",
